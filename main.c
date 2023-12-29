@@ -1,78 +1,64 @@
 // webserver.c
-#include <stdio.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <stdlib.h>
 
-#define BUFF_SIZE 2048
+#include "http_server.h"
+#include "ownedStr.h"
+#include "lauxlib.h"
+#include "lua.h"
+#include "lualib.h"
 
-char resp[] = "HTTP/1.0 200 OK\r\n"
+
+char resp_header[] = "HTTP/1.0 200 OK\r\n"
 "Server: webserver-c\r\n"
-"Content-type: text/html\r\n\r\n"
-"<html>hello, world</html>\r\n";
+"Content-type: text/html\r\n\r\n";
+
+
+
+OwnedStr handleHttpRequest(void* s,const char* requestStr) {
+    OwnedStr resp = OwnedStr_Alloc(resp_header);
+
+
+
+    char method[1024], uri[1024], version[1024]; //TODO: Refactor
+    sscanf(requestStr, "%s %s %s", method, uri, version);
+
+    lua_State *L = luaL_newstate();
+    luaL_openlibs(L);
+
+
+    int status = luaL_loadfile(L, "main.lua");
+    if(status) {
+        if(status == LUA_ERRSYNTAX) {
+            OwnedStr_Concate(&resp,"<h1> SYNTAX ERROR: </h1>");
+            OwnedStr_Concate(&resp,lua_tostring(L, -1));
+            lua_close(L);
+            return resp;
+        }
+    }
+    if(lua_pcall(L, 0, 0, 0))
+        {lua_close(L); OwnedStr_Concate(&resp,"<h1> INIT CALL ERROR</h1>"); return resp; }
+
+
+    lua_getglobal(L, "OnNewRequest");
+    lua_pushstring(L,requestStr);
+
+    if (lua_pcall(L, 1, 1, 0)) {
+        OwnedStr_Concate(&resp,"<h1> RUNTIME ERROR: </h1>");
+        OwnedStr_Concate(&resp,lua_tostring(L, -1));
+        lua_close(L);
+        return resp;
+    }
+
+    OwnedStr_Concate(&resp,lua_tostring(L,-1));
+
+    lua_pop(L,1);
+    lua_close(L);
+    return resp;
+}
+
+void handleHttpError(void* s,const char* c_str) {
+    fprintf(stderr, "HTTP_ERROR: %s",c_str);
+}
 
 int main() {
-    const int socket_descriptor = socket(AF_INET, SOCK_STREAM, 0);
-    if(socket_descriptor == -1) {
-        perror("unable to open socket!");
-        return 1;
-    }
-
-    struct sockaddr_in host_addr;
-    int addrlen = sizeof(host_addr);
-    host_addr.sin_family= AF_INET;
-    host_addr.sin_port= htons(8080);
-    host_addr.sin_addr.s_addr= htonl(INADDR_ANY);
-
-    if(bind(socket_descriptor,(struct sockaddr*)&host_addr, addrlen) != 0) {
-        perror("unable to bind address!");
-        return 1;
-    }
-
-    if(listen(socket_descriptor,SOMAXCONN) != 0) {
-        perror("unable to listen!");
-        return 1;
-    }
-
-    const int running = 1;
-    char buffer[BUFF_SIZE];
-    while(running) {
-        int conn = accept(socket_descriptor, (struct sockaddr*)&host_addr, (socklen_t *)&addrlen);
-
-        struct sockaddr_in client_addr;
-        int client_addrlen = sizeof(client_addr);
-        int conn_name = getsockname(conn,(struct sockaddr*)&client_addr, (socklen_t*)&client_addrlen);
-        if(conn_name < 0) {
-            perror("unable to get connection name");
-            continue;
-        }
-
-        if(conn < 0) {
-            perror("unable to accept connection");
-            continue;
-        }
-        int valread = read(conn,buffer,BUFF_SIZE);
-        if(valread < 0) {
-            perror("unable to read from connection");
-            continue;
-        }
-
-        char method[BUFF_SIZE], uri[BUFF_SIZE], version[BUFF_SIZE];
-        sscanf(buffer, "%s %s %s", method, uri, version);
-        printf("[%s:%u] %s %s %s\n", inet_ntoa(client_addr.sin_addr),
-               ntohs(client_addr.sin_port), method, version, uri);
-
-        int valwrite = write(conn,resp,strlen(resp));
-        if(valwrite < 0) {
-            perror("unable to write to connection");
-            continue;
-        }
-
-        close(conn);
-    }
-
-    close(socket_descriptor);
-    return 0;
+    return HTTP_run(8088,handleHttpRequest,handleHttpError,0);
 }
