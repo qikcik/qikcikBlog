@@ -25,17 +25,26 @@ OwnedStr handleHttpRequest(void* s,const char* requestStr) {
     luaL_openlibs(L);
 
 
-    int status = luaL_loadfile(L, "main.lua");
+    int status = luaL_loadfile(L, "../data/main.lua");
     if(status) {
         if(status == LUA_ERRSYNTAX) {
             OwnedStr_Concate(&resp,"<h1> SYNTAX ERROR: </h1>");
             OwnedStr_Concate(&resp,lua_tostring(L, -1));
-            lua_close(L);
-            return resp;
         }
+        else {
+            OwnedStr_Concate(&resp,"<h1> UNKNOWN LOAD ERROR: </h1>");
+        }
+
+        lua_close(L);
+        return resp;
     }
-    if(lua_pcall(L, 0, 0, 0))
-        {lua_close(L); OwnedStr_Concate(&resp,"<h1> INIT CALL ERROR</h1>"); return resp; }
+    if(lua_pcall(L, 0, 0, 0)) {
+        OwnedStr_Concate(&resp,"<h1> INIT ERROR: </h1>");
+        OwnedStr_Concate(&resp,lua_tostring(L, -1));
+        printf("%s",resp.str);
+        lua_close(L);
+        return resp;
+    }
 
 
     lua_getglobal(L, "OnNewRequest");
