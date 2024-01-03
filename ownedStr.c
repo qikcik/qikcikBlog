@@ -1,5 +1,6 @@
 #include "ownedStr.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,4 +31,15 @@ void OwnedStr_Free(OwnedStr* in_str) {
     free(in_str->str);
     in_str->capacity = 0;
     in_str->str = 0;
+}
+
+OwnedStr OwnedStr_AllocFromFile(FILE *f) {
+    OwnedStr result;
+    fseek(f, 0, SEEK_END);
+    result.capacity = ftell(f);
+
+    fseek(f,  0, SEEK_SET);
+    result.str = (char *) malloc(result.capacity);
+    fread(result.str, 1, result.capacity, f);
+    return result;
 }

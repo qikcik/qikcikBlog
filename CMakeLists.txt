@@ -13,6 +13,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(lua)
 
 add_executable(http_server main.c
-        http_server.c
-        ownedStr.c)
+        tcp_server.c
+        ownedStr.c
+        md4c/src/md4c-html.c
+        md4c/src/md4c.c
+        md4c/src/entity.c)
+
 target_link_libraries(http_server PRIVATE lua::lua)
