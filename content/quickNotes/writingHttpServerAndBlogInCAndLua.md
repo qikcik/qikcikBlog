@@ -1,14 +1,14 @@
 # Writing HTTPserver and blog in C and LUA
 
 First I wanted to say Hi, as it is my first post in my blog!\
-After countless hours spent with my friends Qiu i decided that this is finally the time to start writing my own blog.
-Of course, I could use WordPress or any other "blog engine", but then where would the funniest part been?
+After countless hours spent with my friend Qiu. I decided that this is finally the time to start writing my own blog.
+Of course, I could use WordPress or any other "blog engine", but then... where would the funniest part be?
 
-Without further thinking i founded my old small project of simple single threaded http server - assuming that I can
-~200 lines of code call http server. let me describe some part of it:
+Without further thinking I founded my old small project of simple single threaded http server - assuming that I can
+~200 lines of code call http server. It needed a little bit of tweaking. Let me briefly describe some part of it:
 
 ## Implementation
-code below was must have for me to somehow survive using string operation in C (later I will delegate as much as possible of string operation to LUA):
+code below was must have for me to keep my mental sanity, when using string operation in C (later I will delegate as much as possible of string operation to LUA):
 ```c
 //file: OwnedStr.h
 struct OwnedStr {
@@ -51,7 +51,7 @@ void OwnedStr_Concate(OwnedStr* result, const char* in_str) {
 //...
 ```
 
-below main loop for handing request, it is far for perfect, for now what is the most important: it works
+Below there is main loop for handling requests. It is far from perfect, probably it not handle half of error, but for now what is the most important: it works
 
 ```c
 //file: tcp_server.c
@@ -112,7 +112,8 @@ int TCPServer_run(int port,TCPServer_OnRequest_t onRequest, TCPServer_OnLogPrint
 }
 ```
 
-to keep up appearances of any project aggregation boundary, all TCP related functions are encapsulated in simple header style interface
+To keep up appearances of any project aggregations boundary: All TCP related functions are encapsulated in simple header style interface
+*(I use this pattern a lot in this project)*
 ```c
 //file: tcp_server.h
 typedef struct TCPServer_RequestState TCPServer_RequestState;
@@ -132,8 +133,7 @@ typedef void (* TCPServer_OnLogPrint_t)(void* forwardedState,const char*,LogType
 int TCPServer_run(int port,TCPServer_OnRequest_t onRequest,TCPServer_OnLogPrint_t OnLogPrint, void* forwardedState);
 ```
 
-For convince 
-
+For convince I wrote simple generic function to handle static file serving.
 ```c
 //file: staticFile.h
 void sendDefaultOkHeader(TCPServer_RequestState* s,const char* contentType);
@@ -210,17 +210,18 @@ void serveStaticFile(TCPServer_RequestState* s, const char* filename)
 }
 ```
 
-At this point this server was capable to server static hosted file. I couldn't stop there: I wanted to support at least two feature that requires some form of scripting:
+At that point this server was capable to server static hosted file, but I couldn't stop there:\
+I wanted to support at least two feature that requires some form of scripting:
 - handling user friendly URL
 - website templates, to inject one html file into another
 - thinking of future: some way to represents data structures like post
 
 Also, I wanted to write main content in something else than HTML.\
-Considering all of this: I decided to use LUA for scripting and Markdown (using Md4c) for content.
+Considering all of this: I decided to use LUA for scripting and Markdown *(using Md4c)* for content.
 
-Please do not look at 2 dirty hack that i don't still believe that i wrote them in 2025
-- First of them is using goto
-- Second is to cast ptr to long long in order to pass and receive it from LuaState in API functions.
+Please do not look at 2 dirty hack that I still don't  believe that I wrote them in 2025
+- First of them is using goto to clean up heap allocated memory
+- Second is to cast ptr to (long long) in order to pass and receive it from LuaState in API functions. I wanted to avoid using static *(global)* memory
 ```c
 //file: main.c
 void handleTcpRequest(TCPServer_RequestState* s) {
@@ -297,11 +298,11 @@ void handleTcpRequest(TCPServer_RequestState* s) {
 ```
 
 As you can see I used LUA to generate both header and content.\
-**Is it bad?** - yes.\
-**Is it work (for now)?** - yes. 
+**Is it bad?** - yes\
+**Is it work (for now)?** - yes
 
-I exposed only "GetFileContent", "MdToHTML", "ServeStaticFile", "Print", "sendDefaultHtmlOkHeader", "sendDefault404Header"\
-For website that you can see right now it is enough. and event not all of them are necessary.
+I exposed only: "GetFileContent", "MdToHTML", "ServeStaticFile", "Print", "sendDefaultHtmlOkHeader", "sendDefault404Header" to LUA\
+Surprisingly, for website that you can see right now it is enough. and event not all of them are necessary. at least for now.
 ```c
 //file: main.c
 typedef struct LuaUserContext
@@ -398,7 +399,7 @@ int Lua_sendDefault404Header(lua_State* L)
 }
 ```
 
-and finally bellow is **"entry.lua'**
+And finally bellow is **"entry.lua'**
 ```lua
 require('common')
 
@@ -449,16 +450,15 @@ and simplified **"template/main.html"**
 
 ## Hosting issues
 
-I wanted to host it on ct8 server, but it is running on freebsd.
-First issue was missing "struct sockaddr_in" header
+I wanted to host it on CT8 server, but there is a catch - it is running on freebsd.
+First issue was missing **"struct sockaddr_in"** header. it was simply fixable by including ``<netinet/in.h>``
 ```c
 source/tcp_server.c:54:24: error: variable has incomplete type 'struct sockaddr_in'
-   54 |     struct sockaddr_in host_addr;
 ```
-it was simply fixable by including ``#include <arpa/inet.h>``
 
-second is that SendFile is slightly different implemented i FreeBsd then in Linux. This is too small project to care about host os.
-so I rewrote TCPServer_sendFile that it uses additional buffer.
+Second was trickier: SendFile is slightly different implemented i FreeBsd then in Linux.
+After something, I decided that this is too small project to care about host os.
+...so I rewrote **TCPServer_sendFile** to use additional buffer and only read/write. *(I keep telling to myself that at least I do not use garbage collector)*
 ```c
 void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
     OwnedStr buffor = OwnedStr_AllocFromFile(f);
@@ -472,7 +472,7 @@ void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
 ```
 
 ## End thought
-**Is all of this is in any aspect commercial ready product?** - absolutely not\
+**Is all of this in any aspect commercial ready product?** - absolutely not\
 **Is it Safe, or It is blazingly fast?** - absolutely not\
 **Was it great journey?** - absolutely yes\
 **Is it enough to serve simple blog?** - I hope so
