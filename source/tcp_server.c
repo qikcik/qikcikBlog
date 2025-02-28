@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <netinet/in.h>
+#include <time.h>
 
 struct TCPServer_RequestState {
     int connection;
@@ -105,7 +106,9 @@ int TCPServer_run(int port,TCPServer_OnRequest_t onRequest, TCPServer_OnLogPrint
         onRequest(&req);
 
         {
-            OnLogPrint(forwardedState, "---", LogType_Info);
+            time_t t = time(NULL);
+            struct tm *tm = localtime(&t);
+            OnLogPrint(forwardedState, asctime(tm), LogType_Info);
             OnLogPrint(forwardedState, req.request, LogType_Info);
         }
         close(req.connection);
