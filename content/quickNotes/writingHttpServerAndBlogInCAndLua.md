@@ -456,7 +456,7 @@ First issue was missing **"struct sockaddr_in"** header. it was simply fixable b
 source/tcp_server.c:54:24: error: variable has incomplete type 'struct sockaddr_in'
 ```
 
-Second was trickier: SendFile is slightly different implemented i FreeBsd then in Linux.
+Second was trickier: SendFile is slightly different implemented in FreeBsd then in Linux.
 After something, I decided that this is too small project to care about host os.
 ...so I rewrote **TCPServer_sendFile** to use additional buffer and only read/write. *(I keep telling to myself that at least I do not use garbage collector)*
 ```c
