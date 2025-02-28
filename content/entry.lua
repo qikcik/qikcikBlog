@@ -6,21 +6,28 @@ function HandleRequest(request)
     local location = request_exploder()
 
     --Routes
-    if location == "/quick-notes" then
-        PrintDefaultHtmlOkHeader()
-        Print(GetFileContent("template/main.html") % { content = GetFileContent("template/quickNotes.html")})
-    --Notes
-    elseif location == "/quick-note/writing-http-server-and-blog-in-c-and-lua" then
-        PrintDefaultHtmlOkHeader()
-        Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("quickNotes/writingHttpServerAndBlogInCAndLua.md"))})
-    --Static
-    elseif location == "/public/style.css" then
-        ServeStaticFile("public/style.css");
-    elseif location == "/public/cat.png" then
-        ServeStaticFile("public/cat.png");
-    --Homepage
+
+    if string.starts(location,"/public") then
+        ServeStaticFile(location);
     else
-        PrintDefaultHtmlOkHeader()
-        Print(GetFileContent("template/main.html") % { content = GetFileContent("template/quickNotes.html")})
+        --main
+        if location == "/articles" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = GetFileContent("template/articles.html")})
+        elseif location == "/notes" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
+        --Notes
+        elseif location == "/chip8-emulator-assembler-vhdl" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/chip8EmulatorAssemblerVhdl.md"))})
+        elseif location == "/writing-http-server-and-blog-in-c-and-lua" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/writingHttpServerAndBlogInCAndLua.md"))})
+        --Homepage
+        else
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
+        end
     end
 end
