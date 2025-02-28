@@ -13,12 +13,21 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(lua)
 
-add_executable(http_server main.c
-        tcp_server.c
-        ownedStr.c
-        staticFile.c
-        md4c/src/md4c-html.c
-        md4c/src/md4c.c
-        md4c/src/entity.c)
+FetchContent_Declare(
+        MD4C
+        GIT_REPOSITORY "https://github.com/mity/md4c"
+)
+
+FetchContent_MakeAvailable(MD4C)
+
+include_directories(${MD4C_SOURCE_DIR}/src)
+add_executable(http_server source/main.c
+        source/tcp_server.c
+        source/ownedStr.c
+        source/staticFile.c
+        ${MD4C_SOURCE_DIR}/src/md4c.c
+        ${MD4C_SOURCE_DIR}/src/entity.c
+        ${MD4C_SOURCE_DIR}/src/md4c-html.c)
 
 target_link_libraries(http_server PRIVATE lua::lua)
+target_link_libraries(http_server)

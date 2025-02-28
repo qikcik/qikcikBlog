@@ -31,6 +31,8 @@ void TCPServer_sendStringWithLength(TCPServer_RequestState* s, const char* c, si
 }
 
 #include <sys/sendfile.h>
+#include <signal.h>
+
 void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
     fseek(f, 0L, SEEK_END);
     long int count = ftell(f);
@@ -45,6 +47,8 @@ void* TCPServer_GetForwardedState(TCPServer_RequestState* s) {
 #define BUFF_SIZE (1024*10)
 
 int TCPServer_run(int port,TCPServer_OnRequest_t onRequest, TCPServer_OnLogPrint_t OnLogPrint, void* forwardedState) {
+    signal(SIGPIPE, SIG_IGN);
+
     const int socket_descriptor = socket(AF_INET, SOCK_STREAM, 0);
     if(socket_descriptor == -1) { OnLogPrint(forwardedState,"unable to open socket!",LogType_Error); return -1; }
 
