@@ -447,7 +447,32 @@ and simplified **"template/main.html"**
 </html>
 ```
 
+## Hosting issues
+
+I wanted to host it on ct8 server, but it is running on freebsd.
+First issue was missing "struct sockaddr_in" header
+```c
+source/tcp_server.c:54:24: error: variable has incomplete type 'struct sockaddr_in'
+   54 |     struct sockaddr_in host_addr;
+```
+it was simply fixable by including ``#include <arpa/inet.h>``
+
+second is that SendFile is slightly different implemented i FreeBsd then in Linux. This is too small project to care about host os.
+so I rewrote TCPServer_sendFile that it uses additional buffer.
+```c
+void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
+    OwnedStr buffor = OwnedStr_AllocFromFile(f);
+
+    int write_status = write(s->connection,buffor.str,buffor.capacity);
+    if(write_status < 0)
+        s->onLogPrintCallback(s->forwardedState,"unable to write to connection",LogType_Error);
+
+    OwnedStr_Free(&buffor);
+}
+```
+
 ## End thought
 **Is all of this is in any aspect commercial ready product?** - absolutely not\
+**Is it Safe, or It is blazingly fast?** - absolutely not\
 **Was it great journey?** - absolutely yes\
 **Is it enough to serve simple blog?** - I hope so

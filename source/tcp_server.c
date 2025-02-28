@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <netinet/in.h>
 
 struct TCPServer_RequestState {
     int connection;
@@ -30,14 +31,17 @@ void TCPServer_sendStringWithLength(TCPServer_RequestState* s, const char* c, si
         s->onLogPrintCallback(s->forwardedState,"unable to write to connection",LogType_Error);
 }
 
-#include <sys/sendfile.h>
 #include <signal.h>
 
+
 void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
-    fseek(f, 0L, SEEK_END);
-    long int count = ftell(f);
-    fseek(f, 0L,SEEK_SET);
-    sendfile(s->connection,fileno(f), 0, count);
+    OwnedStr buffor = OwnedStr_AllocFromFile(f);
+
+    int write_status = write(s->connection,buffor.str,buffor.capacity);
+    if(write_status < 0)
+        s->onLogPrintCallback(s->forwardedState,"unable to write to connection",LogType_Error);
+
+    OwnedStr_Free(&buffor);
 }
 
 void* TCPServer_GetForwardedState(TCPServer_RequestState* s) {

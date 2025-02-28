@@ -16,6 +16,8 @@ function HandleRequest(request)
     --Static
     elseif location == "/public/style.css" then
         ServeStaticFile("public/style.css");
+    elseif location == "/public/cat.png" then
+        ServeStaticFile("public/cat.png");
     --Homepage
     else
         PrintDefaultHtmlOkHeader()
