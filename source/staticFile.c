@@ -65,7 +65,7 @@ void serveStaticFile(TCPServer_RequestState* s, const char* filename)
             }
 
             fclose(file);
-            printf("sent: %s \n",filename);
+            //printf("sent: %s \n",filename);
             return;
         }
     }
@@ -77,7 +77,7 @@ void serveStaticFile(TCPServer_RequestState* s, const char* filename)
 
             TCPServer_sendFile(s,file);
             fclose(file);
-            printf("sent: %s \n",filename);
+            //printf("sent: %s \n",filename);
             return;
         }
     }

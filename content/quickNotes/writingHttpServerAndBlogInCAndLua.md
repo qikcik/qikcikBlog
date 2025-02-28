@@ -476,3 +476,6 @@ void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
 **Is it Safe, or It is blazingly fast?** - absolutely not\
 **Was it great journey?** - absolutely yes\
 **Is it enough to serve simple blog?** - I hope so
+
+PS:
+There you can find all the [source code](https://github.com/qikcik/qikcikBlog)

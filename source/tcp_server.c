@@ -76,24 +76,38 @@ int TCPServer_run(int port,TCPServer_OnRequest_t onRequest, TCPServer_OnLogPrint
         TCPServer_RequestState req;
         req.forwardedState = forwardedState;
         req.onLogPrintCallback = OnLogPrint;
-        req.connection = accept(socket_descriptor, (struct sockaddr*)&host_addr, (socklen_t *)&addrlen);
+        req.connection = accept(socket_descriptor, (struct sockaddr *) &host_addr, (socklen_t *) &addrlen);
 
         struct sockaddr_in client_addr;
         int client_addrlen = sizeof(client_addr);
-        int conn_name = getsockname(req.connection,(struct sockaddr*)&client_addr, (socklen_t*)&client_addrlen);
+        int conn_name = getsockname(req.connection, (struct sockaddr *) &client_addr, (socklen_t *) &client_addrlen);
 
-        if(conn_name < 0)
-            { OnLogPrint(forwardedState,"unable to get connection name",LogType_Error); close(req.connection); continue; }
+        if (conn_name < 0) {
+            OnLogPrint(forwardedState, "unable to get connection name", LogType_Error);
+            close(req.connection);
+            continue;
+        }
 
-        if(req.connection < 0)
-            { OnLogPrint(forwardedState,"unable to accept connection",LogType_Error); close(req.connection); continue; }
+        if (req.connection < 0) {
+            OnLogPrint(forwardedState, "unable to accept connection", LogType_Error);
+            close(req.connection);
+            continue;
+        }
 
-        const int read_status = read(req.connection,buffer,BUFF_SIZE);
-        if(read_status < 0)
-            { OnLogPrint(forwardedState,"unable to read from connection",LogType_Error); close(req.connection); continue; }
+        const int read_status = read(req.connection, buffer, BUFF_SIZE);
+        if (read_status < 0) {
+            OnLogPrint(forwardedState, "unable to read from connection", LogType_Error);
+            close(req.connection);
+            continue;
+        }
 
         req.request = buffer;
         onRequest(&req);
+
+        {
+            OnLogPrint(forwardedState, "---", LogType_Info);
+            OnLogPrint(forwardedState, req.request, LogType_Info);
+        }
         close(req.connection);
     }
 
