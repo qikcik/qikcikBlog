@@ -473,7 +473,7 @@ void TCPServer_sendFile(TCPServer_RequestState* s ,FILE* f) {
 
 ## End thought
 **Is all of this in any aspect commercial ready product?** - absolutely not\
-**Is it Safe, or It is blazingly fast?** - absolutely not\
+**Is it safe, or Is it blazingly fast?** - absolutely not\
 **Was it great journey?** - absolutely yes\
 **Is it enough to serve simple blog?** - I hope so
 
