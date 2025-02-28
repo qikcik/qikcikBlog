@@ -4,7 +4,7 @@ First I wanted to say Hi, as it is my first post in my blog!\
 After countless hours spent with my friend Qiu. I decided that this is finally the time to start writing my own blog.
 Of course, I could use WordPress or any other "blog engine", but then... where would the funniest part be?
 
-Without further thinking I founded my old small project of simple single threaded http server - assuming that I can
+Without further thinking I found my old small project of simple single threaded http server - assuming that I can
 ~200 lines of code call http server. It needed a little bit of tweaking. Let me briefly describe some part of it:
 
 ## Implementation
