@@ -17,13 +17,19 @@ function HandleRequest(request)
         elseif location == "/notes" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
-        --Notes
+            --Notes
         elseif location == "/chip8-emulator-assembler-vhdl" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/chip8EmulatorAssemblerVhdl.md"))})
         elseif location == "/writing-http-server-and-blog-in-c-and-lua" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/writingHttpServerAndBlogInCAndLua.md"))})
+        elseif location == "/my-attempt-to-implement-minimalistic-flexbox-layout" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/myAttemptToImplementMinimalisticFlexboxLayout.md"))})
+        elseif location == "/i-am-terrible-at-math" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/iAmTerribleAtMath.md"))})
         --Homepage
         else
             PrintDefaultHtmlOkHeader()
