@@ -94,3 +94,7 @@ li {
 a:link, a:visited {
     color: #F26419;
 }
+
+img {
+    max-width: 100%;
+}
