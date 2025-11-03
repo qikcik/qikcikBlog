@@ -1,7 +1,11 @@
-# CHIP8 - emulator, assembler, vhdl
+# CHIP8 - emulator, assembler, game, vhdl hardware implementations
 
 short video presentation:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/K1BQPlGRoo8?si=dIAXQCijmJmCWwjj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div class="iframe-container"> 
+<iframe class="responsive-iframe" src="https://www.youtube.com/embed/K1BQPlGRoo8?si=dIAXQCijmJmCWwjj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+repo link: [github](https://github.com/qikcik/CHIP8)
 
 ## Introduction
 **Project goal was to:**
@@ -10,7 +14,7 @@ short video presentation:
 - Create the simplest Assembler for that ISA, even without any compile time execution (like addition of constants/literals)
 - Create a program/game for that platform
 
-I decided to implement a CHIP8. Depending on the source it is called a specification of  ISA, a virtual machine,an interpreter or a programming language.
+I decided to implement a CHIP8. Depending on the source it can be called a specification of  ISA, a virtual machine,an interpreter or a programming language.
 
 **CHIP8 contains:**
 - 16x  general purpose 8-bit registers (the last one is used to store flags of operations) (REG_X)
@@ -22,20 +26,19 @@ I decided to implement a CHIP8. Depending on the source it is called a specifica
 - 16-key keypad (0,1,2,3,4,5,6,7,8,9,0,A,B,C,D,E,F)
 - 64x32-pixel monochrome display (draw opcode is doing xor at pixels and sets collision flag, when overdrive a pixel - which is important in implementing games)
 
-As a specification I used http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+As a specification I used [Cowgod's Chip-8 Technical Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
 
 At the beginning I just want to mention that I made this project for pure education purpose, and it is not in production ready state.
-There is some of commented code, of not optimal solutions and of dirty fast hacks.
+There is some of commented code, some of not optimal solutions and some of dirty fast hacks.
 I wanted only to understand crucial concepts and big picture of "computer system".
-
 
 
 ## Implementing emulator
 
 I wanted to focus on opcode implementation in pure details and avoid abstractions layers. That is why, I decided to use C.
-I separated CHIP8 implementation from interaction platform specific code (like drawing, handling input).
+I separated CHIP8 specific implementation code from code that interact with platform (like drawing, handling input).
 
-There is content of [[chip8.h](https://github.com/qikcik/CHIP8/tree/master/emulator/sources/chip8.h)}:
+There is content of [[chip8.h](https://github.com/qikcik/CHIP8/tree/master/emulator/sources/chip8.h)]:
 ```c++
 struct Chip8;
 typedef struct Chip8 Chip8;
@@ -59,7 +62,7 @@ Let's deep dive into some concepts.
 Decoding and execution of instruction is done in the deadly simplest way, that I know.
 
 
-At the beginning There is fetching 2 bytes (PC and PC+1) {[chip8.h](https://github.com/qikcik/CHIP8/tree/master/emulator/sources/chip8.h)}
+At the beginning There is fetching 2 bytes (PC and PC+1) [[chip8.h](https://github.com/qikcik/CHIP8/tree/master/emulator/sources/chip8.h)]
 ```c++
 uint16_t fetch_opcode(Chip8* c) {
     const uint8_t ms = c->memory[c->pc_reg];
@@ -70,8 +73,7 @@ uint16_t fetch_opcode(Chip8* c) {
 }
 ```
 
-
-Then in one big if-else, There is the implementation of specific instruction: {[chip8.h](https://github.com/qikcik/CHIP8/tree/master/emulator/sources/chip8.h)}
+Then in one big if-else, Where is the implementation for each specific instruction: [[chip8.h](https://github.com/qikcik/CHIP8/tree/master/emulator/sources/chip8.h)]
 ```c++
 const uint16_t opcode = fetch_opcode(c);
 if(DEBUG_PRINT) printf("at %x instruction %x: ",c->pc_reg-2,opcode);
@@ -106,10 +108,9 @@ else if((opcode & 0xF00F) == 0x8004) { // 8xy4 - ADD Vx, Vy
 }
 ```
 
-The most crucial concept is how to describe opcode layout, and where in it there are arguments.
-Below description of that one used by me from 
-{[http://devernay.free.fr/hacks/chip8/C8TECH10.HTM](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)}
-```
+The most crucial concept is how to describe opcode layout, and where in it, there are arguments.
+Below description of that one used by me from [Cowgod's Chip-8 Technical Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
+```md
 nnn or addr - A 12-bit value, the lowest 12 bits of the instruction
 n or nibble - A 4-bit value, the lowest 4 bits of the instruction
 x - A 4-bit value, the lower 4 bits of the high byte of the instruction
@@ -117,15 +118,14 @@ y - A 4-bit value, the upper 4 bits of the low byte of the instruction
 kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 ```
 
-I want to mention Drawing instruction, because it is one of the most complex instruction.
-Below there is description from {[http://devernay.free.fr/hacks/chip8/C8TECH10.HTM](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)}
-```
+I want to mention Drawing instruction, because it is one of the most complex instructions.
+```md
 Dxyn - DRW Vx, Vy, nibble
 Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
 The interpreter reads n bytes from memory, starting at the address stored in I. These bytes are then displayed as sprites on screen at coordinates (Vx, Vy). Sprites are XORed onto the existing screen. If this causes any pixels to be erased, VF is set to 1, otherwise it is set to 0. If the sprite is positioned so part of it is outside the coordinates of the display, it wraps around to the opposite side of the screen. See instruction 8xy3 for more information on XOR, and section 2.4, Display, for more information on the Chip-8 screen and sprites.
 ```
 
-And there is my current implementation of draw instruction:
+And there it is my current implementation of draw instruction:
 ```c++
 else if((opcode & 0xF000) == 0xD000) { // Dxyn - DRW Vx, Vy, nibble
     uint8_t target_v_reg_x = (opcode & 0x0F00) >> 8;
@@ -158,7 +158,7 @@ else if((opcode & 0xF000) == 0xD000) { // Dxyn - DRW Vx, Vy, nibble
 }
 ```
 
-During development as a test suite, I used this test program https://github.com/Timendus/chip8-test-suite
+During development as a test suite, I used [this test program](https://github.com/Timendus/chip8-test-suite)
 
 There are some final screenshot:
 
@@ -166,11 +166,11 @@ There are some final screenshot:
 ![emu_3.png](/public/img/chip8/emu_3.png) ![emu_4.png](/public/img/chip8/emu_4.png)
 
 My implementation is far from perfect, It doesn't even have unit tests.
-Thanks to it, I got used to opcodes at least a little bit.
+Thanks to that, I got used to using raw opcodes at least a little bit.
 
 ## Implementing Assembler
 
-This time I used C++, because it is more flexible and U was able to use more functional style paradigm,
+This time I used C++, because it is more flexible, and I  was able to use more functional style paradigm,
 my Assembly notation is a variant from "Cowgod's Chip-8 Technical Reference v1.0 opcode" description.
 
 The first step in my implementation of assembling is TokenIterator. It scans source code and create tokens like:
@@ -179,7 +179,7 @@ The first step in my implementation of assembling is TokenIterator. It scans sou
 - numbers (2,0b01,0xFF),
 - operators (*,:,;)
 
-Below some code snippets {[tokenIterator.hpp](https://github.com/qikcik/CHIP8/tree/master/assembler/source/tokenIterator.hpp)}
+Below some code snippets [[tokenIterator.hpp](https://github.com/qikcik/CHIP8/tree/master/assembler/source/tokenIterator.hpp)]
 ```c++
 namespace Token
 {
@@ -237,7 +237,7 @@ The next step is translating that tokens into binary representation of opcode.
 
 My implementation have single array with all opcode. Each one opcode contains list of TokenMatcher functions.
 
-If all of them are fulfilled in sequence, the corresponding OutputGenerator produced bytes. {[main.cpp](https://github.com/qikcik/CHIP8/tree/master/assembler/source/main.cpp)}
+If all of them are fulfilled in sequence, the corresponding OutputGenerator produced output bytes. [[main.cpp](https://github.com/qikcik/CHIP8/tree/master/assembler/source/main.cpp)]
 ```c++
 std::vector<OpCode> opcodes = {
     OpCode{{ExactOperator(";"),Any()}, [](auto a, auto b, auto c){} },
@@ -287,7 +287,7 @@ std::vector<OpCode> opcodes = {
 };
 ```
 
-a few TokenMatcher generators as example:
+a few TokenMatcher as example:
 ```c++
 using TokenMatcher = std::function<bool(Token::type&)>;
 //...
@@ -323,7 +323,7 @@ auto AnyNumberOrLabel = []() -> TokenMatcher  {
 };
 ```
 
-a few OutputGenerator generators as example:
+a few OutputGenerator as example:
 ```c++
 using OutputGenerator = std::function<void(Context& context, std::vector<Token::type>, size_t startIdx)>;
 //...
@@ -370,8 +370,8 @@ auto RegisterAddress = []() -> OutputGenerator  {
 ```
 
 One of the main cons of this approach is that it is a single pass.
-So after generating output, correct address must be putted in specific place based on special map.
-Similar to how the standard linker works.
+So after generating output, correct address must be putted into specific place based on special map.
+I Think that this is similar to how the standard "linker" works.
 
 ```c++
 struct Context
@@ -402,17 +402,17 @@ for(auto pairIt : context.addrRefs) {
 }
 ```
 
-This architecture allowed me to fastly iterate over opcodes implementation and reusing code.
-In parallel to creating assembly and that assembler I created a game. That's why all the code examples are in the next chapter.
+This architecture allowed me to fastly iterate over opcodes implementation and reusing a lot of code.
+In parallel to creating assembly and that assembler, I created a game. That's why all the code examples are in the next chapter.
 
 
 ## Creating the Game
 
-I decided to create flappy bird clone as example game, below screenshot from emulator:
+I decided to create flappy bird clone, below screenshot from emulator:
 
 ![flappy_1.png](/public/img/chip8/flappy_1.png) ![flappy_2.png](/public/img/chip8/flappy_2.png)
 
-Below there are some code snippets. I hope that all of them are self-explanatory based on similarity to "standard" assembly: {[source.c8wasn](https://github.com/qikcik/CHIP8/tree/master/source.c8asm)}
+Below there are some code snippets. I hope that all of them are self-explanatory based on similarity to "standard" assembly syntax: [[source.c8wasn](https://github.com/qikcik/CHIP8/tree/master/source.c8asm)]
 ```wasm 
 jp CODE
 
@@ -628,11 +628,11 @@ jp CODE
 
 The most interesting section is “Self Modificable Code”,
 Due to the fact that draw opcodes have sprite height as constant.
-```
+```md
 Dxyn - DRW Vx, Vy, nibble
 Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
 ```
-This was a problem in drawing "pipe", because they height is randomized.
+This was a problem in drawing "pipes", because they height is randomized.
 I created code that overwrite DRW instruction opcode, so I could easily use dynamic height from a register.
 
 ```wasm
@@ -672,128 +672,128 @@ As development board I used Altera RZ-EasyFPGA A2.2 with Altera Cyclone EP4CE8E2
 
 ![easyFPGA.png](/public/img/chip8/easyFPGA.png)
 
-One of the most reused entity is ClockDivider. I think that name is self-explanatory. {[clockDivider.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/clockDivider.vhd)}
+One of the most reused entity is ClockDivider. I think that name is self-explanatory. [[clockDivider.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/clockDivider.vhd)]
 ```vhdl
 entity clockDivider is
-	generic(
-		inClock_speed 	: integer	:= 50_000_000;
-		outClock_speed	: integer	:= 50_000_000
-	);
-	port(
-		in_clk			: in std_logic 	:= '0';
-		out_clk			: out std_logic	:= '0'
-	);
+    generic(
+        inClock_speed 	: integer	:= 50_000_000;
+        outClock_speed	: integer	:= 50_000_000
+    );
+    port(
+        in_clk		: in std_logic 	:= '0';
+        out_clk		: out std_logic	:= '0'
+    );
 end entity clockDivider;
 ```
 
-For debug purpose I created  simple controller for 4x7segment display which is on the board.  {[disp4x7Seg_Types.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/disp4x7Seg_Types.vhd)/[disp4x7Seg.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/disp4x7Seg.vhd)}
+For debug purpose I created  simple controller for 4x7segment display which is on the board.  [[disp4x7Seg_Types.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/disp4x7Seg_Types.vhd)/[disp4x7Seg.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/disp4x7Seg.vhd)]
 ```vhdl
 
 package Disp4x7Seg_Types is
-	type Array4x7Seg is array(3 downto 0) of  std_logic_vector(7 downto 0);
-	
-	constant CONST7SEG_EMPTY 	: std_logic_vector(7 downto 0) 	:= "00000000";
-	constant CONST7SEG_DOT 		: std_logic_vector(7 downto 0) 	:= "00000001";
-	
-	constant CONST7SEG_0 : std_logic_vector(7 downto 0) := "11111100";
-	constant CONST7SEG_1 : std_logic_vector(7 downto 0) := "01100000";
-	--...
-	constant CONST7SEG_H : std_logic_vector(7 downto 0) := "01101110";
-	constant CONST7SEG_J : std_logic_vector(7 downto 0) := "11111000";
-	--...
-	
+    type Array4x7Seg is array(3 downto 0) of  std_logic_vector(7 downto 0);
+    
+    constant CONST7SEG_EMPTY 	: std_logic_vector(7 downto 0) 	:= "00000000";
+    constant CONST7SEG_DOT 	: std_logic_vector(7 downto 0) 	:= "00000001";
+    
+    constant CONST7SEG_0        : std_logic_vector(7 downto 0) := "11111100";
+    constant CONST7SEG_1        : std_logic_vector(7 downto 0) := "01100000";
+    --...
+    constant CONST7SEG_H        : std_logic_vector(7 downto 0) := "01101110";
+    constant CONST7SEG_J        : std_logic_vector(7 downto 0) := "11111000";
+    --...
+    
     function BinTo7SegHex(inBin : std_logic_vector(3 downto 0)) 
-		return std_logic_vector; 
+        return std_logic_vector; 
 end package Disp4x7Seg_Types;
-	
+    
 entity Disp4x7Seg is
-	port (
-		in_clk					: in std_logic;
-		in_7seg 					: in Array4x7Seg;
-		out_7seg 				: out std_logic_vector(7 downto 0) 	:= (others => '0');
-		out_7segDigitSelect 	: out std_logic_vector(3 downto 0) 	:= (others => '0')
-	);
+    port (
+        in_clk	                : in std_logic;
+        in_7seg                 : in Array4x7Seg;
+        out_7seg 	        : out std_logic_vector(7 downto 0) 	:= (others => '0');
+        out_7segDigitSelect 	: out std_logic_vector(3 downto 0) 	:= (others => '0')
+    );
 end Disp4x7Seg;
 ```
 
 And separated component that hides details about generating VGA signal.
-At the moment of writing ths doc, this seems to me to be a little mistake as it should more integrated which VRAM. {[vgaGenerator.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/vgaGenerator.vhd)}
+At the moment of writing ths doc, this seems to me to be a little mistake as it should more integrated which VRAM. [[vgaGenerator.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/vgaGenerator.vhd)]
 ```vhdl
 entity VgaGenerator is
-	generic (
-		clkFreq					: integer := 50_000_000;
-		pixelFreq				: integer := 25_175_000;
-		 
-		hSync_visibleArea		: integer := 640;
-		hSync_frontPorch    	: integer := 16;
-		hSync_syncPulse		: integer := 96;
-		hSync_backPorch     	: integer := 48;
-		 
-		vSync_visibleArea		: integer := 480;
-		vSync_frontPorch    	: integer := 11;
-		vSync_syncPulse		: integer := 2;
-		vSync_backPorch     	: integer := 31
-	);
-	port (
-		in_clk					: in  std_logic := '0';
-		
-		out_vgaRGB				: out std_logic_vector(2 downto 0) := (others => '0');
-		out_vgaHSync			: out std_logic := '0';
-		out_vgaVSync			: out std_logic := '0';
+    generic (
+        clkFreq		    : integer := 50_000_000;
+        pixelFreq	    : integer := 25_175_000;
+         
+        hSync_visibleArea   : integer := 640;
+        hSync_frontPorch    : integer := 16;
+        hSync_syncPulse	    : integer := 96;
+        hSync_backPorch     : integer := 48;
+         
+        vSync_visibleArea   : integer := 480;
+        vSync_frontPorch    : integer := 11;
+        vSync_syncPulse	    : integer := 2;
+        vSync_backPorch     : integer := 31
+    );
+    port (
+        in_clk	            : in  std_logic := '0';
+        
+        out_vgaRGB          : out std_logic_vector(2 downto 0) := (others => '0');
+        out_vgaHSync	    : out std_logic := '0';
+        out_vgaVSync	    : out std_logic := '0';
 
-		out_isDisplaying		: out std_logic := '0';
-		out_hPos					: out integer := 0;
-		out_vPos					: out integer := 0;
-		in_vgaRGB				: in  std_logic_vector(2 downto 0) := (others => '0')
-	);
+        out_isDisplaying    : out std_logic := '0';
+        out_hPos	    : out integer := 0;
+        out_vPos	    : out integer := 0;
+        in_vgaRGB	    : in  std_logic_vector(2 downto 0) := (others => '0')
+    );
 end VgaGenerator;
 
 --...
 
 begin
 
-	e_clockDivider: ClockDivider 
-	generic map(
-		inClock_speed 	=> clkFreq,
-		outClock_speed => pixelFreq
-	)
-	port map(
-		in_clk	=> in_clk,
-		out_clk	=> clkEnabled
-	);
+    e_clockDivider: ClockDivider 
+    generic map(
+        inClock_speed 	=> clkFreq,
+        outClock_speed => pixelFreq
+    )
+    port map(
+        in_clk	=> in_clk,
+        out_clk	=> clkEnabled
+    );
 
-	out_vgaHSync <= '1' when hCounter >= hSync_visibleArea + hSync_frontPorch
-							  and  hCounter <  hSync_visibleArea + hSync_frontPorch + hSync_syncPulse else '0';
-							  
-	out_vgaVSync <= '1' when vCounter >= vSync_visibleArea + vSync_frontPorch
-							  and  vCounter <  vSync_visibleArea + vSync_frontPorch + vSync_syncPulse else '0';
-		
+    out_vgaHSync <= '1' when hCounter >= hSync_visibleArea + hSync_frontPorch
+                              and  hCounter <  hSync_visibleArea + hSync_frontPorch + hSync_syncPulse else '0';
+                              
+    out_vgaVSync <= '1' when vCounter >= vSync_visibleArea + vSync_frontPorch
+                              and  vCounter <  vSync_visibleArea + vSync_frontPorch + vSync_syncPulse else '0';
+        
 
-	out_isDisplaying 	<= '1' when (hCounter < hSync_visibleArea) and (vCounter < vSync_visibleArea) else '0';
-	out_vgaRGB 	<= in_vgaRGB when (hCounter < hSync_visibleArea) and (vCounter < vSync_visibleArea)  else (others => '0');
-	
-	out_hPos <= hCounter when hCounter < wholeLine 	else -1;
-	out_vPos <= vCounter when vCounter < wholeFrame else -1;
+    out_isDisplaying 	<= '1' when (hCounter < hSync_visibleArea) and (vCounter < vSync_visibleArea) else '0';
+    out_vgaRGB 	<= in_vgaRGB when (hCounter < hSync_visibleArea) and (vCounter < vSync_visibleArea)  else (others => '0');
+    
+    out_hPos <= hCounter when hCounter < wholeLine 	else -1;
+    out_vPos <= vCounter when vCounter < wholeFrame else -1;
 
 
-	process(in_clk,clkEnabled)
-	begin 
-		if rising_edge(clkEnabled) then
-			if(hCounter < wholeLine-1) then    --horizontal counter (pixels)
-				hCounter <= hCounter + 1;
-			else
-				hCounter <= 0;
-				
-				if(vCounter < wholeFrame-1) then  --veritcal counter (rows)
-					vCounter <= vCounter + 1;
-				else
-					vCounter <= 0;
-				end if;
-				
-			end if;
-			
-		end if;
-	end process;
+    process(in_clk,clkEnabled)
+    begin 
+        if rising_edge(clkEnabled) then
+            if(hCounter < wholeLine-1) then    --horizontal counter (pixels)
+                hCounter <= hCounter + 1;
+            else
+                hCounter <= 0;
+                
+                if(vCounter < wholeFrame-1) then  --veritcal counter (rows)
+                    vCounter <= vCounter + 1;
+                else
+                    vCounter <= 0;
+                end if;
+                
+            end if;
+            
+        end if;
+    end process;
 ```
 
 For RAM I generated 1 Port BRAM with a 12 bit size address, and 8 bit size values.
@@ -813,7 +813,7 @@ Below FSM states:
 
 The most important states are Begin, StoreFirstByte, StoreSecondByte, ParseAndInitOpcode.
 They are used to fetch 2 bytes and combine them into instruction.
-And if specific opcode can be executed in single cycle, executing that opcode. {[entry.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/entry.vhd)}
+And if specific opcode can be executed in single cycle, executing that opcode. [[entry.vhd](https://github.com/qikcik/CHIP8/tree/master/fpga/entry.vhd)]
 ```vhdl
 begin
     if rising_edge(in_clk_50mhz) then
@@ -881,7 +881,7 @@ elsif opcode_nn = x"65" then --Fx65 - load registers v0 - vX from memory startin
     nextState <= TState_LoadReg_PrepareAddress;
 
 --...
-							
+                            
 when TState_LoadReg_PrepareAddress =>
     ram_addr(11 downto 0)  <= std_logic_vector(reg_i+to_unsigned(regLoadSave_counter,12))(11 downto 0);
     
@@ -899,8 +899,7 @@ when TState_LoadReg_Store =>
     end if;
 ```
 
-
-As in previous section below are description of draw opcode implementation:
+As in the previous section, below there is draw opcode implementation:
 ```vhdl
 when TState_Draw_ReadLine =>
     vram_a_addr 	 <= std_logic_vector(to_unsigned(draw_counter + to_integer(regs_generic(to_integer(opcode_y))),5));
@@ -944,7 +943,7 @@ when TState_Draw_Increment =>
 
 Drawing is done in the most brute-force way, without taking into account VRAM read speed.
 If I do it again I will integrate it with the vga generator.
-This will allow me to use vertical blank and horizontal blank, to read values from memory.
+This will allow me to use delays during vertical blank and horizontal blank to read values from memory.
 Nevertheless, implemented approach works good enough.
 ```vhdl
 mapped_xPos <= to_integer(shift_right(to_unsigned(vga_xPos,10), 3));
@@ -969,6 +968,8 @@ end process;
 ```
 
 
-Some opcode implementation needs some tweaking. They are no crucial and current implementation is able to run some games
-![fpga_1.png](/public//public/img/chip8/chip8/fpga_1.png) ![fpga_2.png](/public/img/chip8/fpga_2.png)
+Some opcode implementation needs some tweaking. Hopefully they are no crucial and current implementation is able to run some games
+![fpga_1.png](/public/img/chip8/fpga_1.png) ![fpga_2.png](/public/img/chip8/fpga_2.png)
 ![fpga_3.png](/public/img/chip8/fpga_3.png) ![fpga_4.png](/public/img/chip8/fpga_4.png)
+
+Thanks for reading! i will be grateful for all comments.

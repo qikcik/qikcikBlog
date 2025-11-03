@@ -18,9 +18,9 @@ function HandleRequest(request)
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
             --Notes
-        elseif location == "/chip8-emulator-assembler-vhdl" then
+        elseif location == "/chip8-emulator-assembler-game-vhdl" then
             PrintDefaultHtmlOkHeader()
-            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/chip8EmulatorAssemblerVhdl.md"))})
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/chip8EmulatorAssemblerGameVhdl.md"))})
         elseif location == "/writing-http-server-and-blog-in-c-and-lua" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/writingHttpServerAndBlogInCAndLua.md"))})
@@ -33,7 +33,7 @@ function HandleRequest(request)
         --Homepage
         else
             PrintDefaultHtmlOkHeader()
-            Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
+            Print(GetFileContent("template/main.html") % { content = GetFileContent("template/articles.html")})
         end
     end
 end
