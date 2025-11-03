@@ -107,7 +107,8 @@ else if((opcode & 0xF00F) == 0x8004) { // 8xy4 - ADD Vx, Vy
 ```
 
 The most crucial concept is how to describe opcode layout, and where in it there are arguments.
-Below description of that one used by me from http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+Below description of that one used by me from 
+{[http://devernay.free.fr/hacks/chip8/C8TECH10.HTM](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)}
 ```
 nnn or addr - A 12-bit value, the lowest 12 bits of the instruction
 n or nibble - A 4-bit value, the lowest 4 bits of the instruction
@@ -117,7 +118,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 ```
 
 I want to mention Drawing instruction, because it is one of the most complex instruction.
-Below there is description from http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+Below there is description from {[http://devernay.free.fr/hacks/chip8/C8TECH10.HTM](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)}
 ```
 Dxyn - DRW Vx, Vy, nibble
 Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
@@ -808,7 +809,7 @@ Execution is built around one big Finite State Machine, with additional delay wh
 That delay was also useful during development for debugging purpose.
 
 Below FSM states:
-![fsm.png](/public/img/chip8/fsm.png)
+![states.png](/public/img/chip8/states.png)
 
 The most important states are Begin, StoreFirstByte, StoreSecondByte, ParseAndInitOpcode.
 They are used to fetch 2 bytes and combine them into instruction.
