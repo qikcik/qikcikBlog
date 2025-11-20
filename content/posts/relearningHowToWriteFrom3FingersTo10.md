@@ -1,4 +1,4 @@
-# Relearning how to write:  From 3 Fingers to 10
+# Relearning how to write: From 3 Fingers to 10
 
 ## The Confession
 
