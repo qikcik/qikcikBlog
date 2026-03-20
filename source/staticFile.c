@@ -55,7 +55,7 @@ void serveStaticFile(TCPServer_RequestState* s, const char* filename)
 {
     const ExtFileInfo extFileInfo = getExtFileInfo(filename);
     if(extFileInfo.type == File_Text) {
-        FILE* file = fopen(filename, "r");
+        FILE* file = fopen(filename, "rb");
         if (file) {
             sendDefaultOkHeader(s,extFileInfo.default_contentType);
 

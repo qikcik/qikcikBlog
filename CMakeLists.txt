@@ -19,10 +19,9 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(MD4C)
-
+`
 include_directories(${MD4C_SOURCE_DIR}/src)
 add_executable(http_server source/main.c
-        source/tcp_server.c
         source/ownedStr.c
         source/staticFile.c
         ${MD4C_SOURCE_DIR}/src/md4c.c
@@ -30,4 +29,16 @@ add_executable(http_server source/main.c
         ${MD4C_SOURCE_DIR}/src/md4c-html.c)
 
 target_link_libraries(http_server PRIVATE lua::lua)
-target_link_libraries(http_server)
+
+
+if(WIN32)
+    target_sources(http_server PRIVATE source/tcp_server_win32.c)
+    target_link_libraries(http_server PRIVATE ws2_32)
+elseif(UNIX)
+    target_sources(http_server PRIVATE source/tcp_server_posix.c)
+endif()
+
+
+set_target_properties(http_server PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin"
+)

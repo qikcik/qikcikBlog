@@ -37,7 +37,7 @@ int Lua_GetFileContent(lua_State* L)
     OwnedStr path = OwnedStr_Alloc(FILE_PREFIX);
     OwnedStr_Concate(&path,arg);
 
-    FILE* file = fopen(path.str, "r");
+    FILE* file = fopen(path.str, "rb");
     OwnedStr_Free(&path);
 
     if(file)
@@ -127,9 +127,15 @@ void handleScriptError(void* s,const char* c_str,LogType_t type) {
 
 void handleTcpRequest(TCPServer_RequestState* s) {
     char method[128], uri[2048], version[128];
-    sscanf(TCPServer_GetRequestString(s), "%s %s %s", method, uri, version);
+    int header_items = sscanf(TCPServer_GetRequestString(s), "%127s %2047s %127s", method, uri, version);
 
-    FILE* file = fopen("../content/entry.lua", "r");
+    if (header_items != 3) {
+        handleScriptError(s, "Malformed HTTP request line (buffer boundary or missing tokens)", LogType_Error);
+        sendDefault500Header(s);
+        return;
+    }
+
+    FILE* file = fopen("../content/entry.lua", "rb");
     OwnedStr buffer = OwnedStr_AllocFromFile(file);
 
     lua_State *L = luaL_newstate();
