@@ -33,6 +33,9 @@ function HandleRequest(request)
         elseif location == "/relearning-how-to-write-from-3-fingers-to-10" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/relearningHowToWriteFrom3FingersTo10.md"))})
+        elseif location == "/my-google-recruitment-journey-part-1" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/myGoogleRecrutmentJourneyPart1.md"))})
         --Homepage
         else
             PrintDefaultHtmlOkHeader()

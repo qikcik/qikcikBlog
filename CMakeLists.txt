@@ -19,7 +19,7 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(MD4C)
-`
+
 include_directories(${MD4C_SOURCE_DIR}/src)
 add_executable(http_server source/main.c
         source/ownedStr.c
