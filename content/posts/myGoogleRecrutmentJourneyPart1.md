@@ -1,4 +1,4 @@
-# My Google Recruitment Journey, Part 1: Compressing Algorithmic Debt into a 7-Day Speedrun
+# My Google Recruitment Journey (Part 1): Brute-Forcing My Algorithmic Ignorance
 
 ## Introduction 
 About 2 months ago, an email from xwf.google.com dropped into my inbox,
