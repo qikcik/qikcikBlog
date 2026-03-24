@@ -17,7 +17,10 @@ function HandleRequest(request)
         elseif location == "/notes" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
-        elseif location == "/media" then
+        elseif location == "/projects" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/projects.md"))})
+        elseif location == "/media-observations" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/media.md"))})
         --Notes
