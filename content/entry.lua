@@ -17,7 +17,10 @@ function HandleRequest(request)
         elseif location == "/notes" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = GetFileContent("template/notes.html")})
-            --Notes
+        elseif location == "/media" then
+            PrintDefaultHtmlOkHeader()
+            Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/media.md"))})
+        --Notes
         elseif location == "/chip8-emulator-assembler-game-vhdl" then
             PrintDefaultHtmlOkHeader()
             Print(GetFileContent("template/main.html") % { content = MdToHTML(GetFileContent("posts/chip8EmulatorAssemblerGameVhdl.md"))})
