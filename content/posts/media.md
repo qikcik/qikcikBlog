@@ -3,6 +3,34 @@
 (my short observations about the artifacts created by other people, please keep in mind that following text is full of spoilers in classical way of understanding this term.) 
 
 
+## 25.03.2026: Dead Poets Society (1989)
+
+To be honest, I do not understand why this movie is so iconic. 
+The first half is a weird experience, filled with elements whose purpose I simply cannot understand. like when Keating speaks about independent thinking, almost all the students misinterpret it from a shallow, hedonistic perspective. For me also all of the narrative feels unnecessarily overwhelming.
+
+Despite this jarring execution, there is a philosophical core. 
+The strongest point is the demonstration that independent thinking is essential for a fulfilled life and building genuine confidence. 
+It also effectively pinpoints the difference between good and bad authority, and how crucial the right mentorship is in creating identity.
+
+However, the execution is fundamentally flawed by what I consider a cheap narrative trick. 
+The suicide plotline directly contradicts all the philosophical messages the movie tried to convey earlier. 
+The teacher explicitly gave the student a rational, time-delayed protocol: "wait until you are an adult, then execute your own path."
+
+Instead, the movie attempts to romanticize an unnecessary destruction. 
+It hides the deeper, more complex understanding of compromise and adapting to society while keeping and developing your own identity. 
+It completely destroys any potential discussion about human communication and the art of negotiation.
+
+The only student who truly learned something from Keating's lessons was the "new student" Todd. 
+Unlike the rest of the class, who merely got  "inspired" he had the courage to honestly admit that he couldn't write the poem. 
+He allowed the teacher to teach him through interaction and friction. He had doubts, but he gave the new method a try in a controlled environment. 
+This allowed him to develop his actual identity, not just a unrealistic shallow copy of someone else.
+
+In the end, he was the only one genuinely sorry about the tragedy, and I think he truly understood Keating's real intentions. 
+When the student committed suicide, Keating’s facial expression showed that this was not what he intended. he was crushed that the boy didn't find enough courage inside to actually live his life while expressing himself.
+
+There are much better movies that attack the exact same philosophical problem ("Carpe Diem") without these fatal flaws. 
+Arrival demonstrates the concept of enjoying life even when we know it will end tragically. Meanwhile, Forrest Gump shows the pure essence of "Carpe Diem" in daily, practical execution.
+
 ## 24.03.2026: Forrest Gump (1994)
 
 This is one of those movies that’s hard to put into words. And one of those I’ll definitely return to. The narrative execution is brilliant.
