@@ -44,7 +44,7 @@ A strategic tower defense game where your goal is to defend a baking cheesecake 
 An arcade mine-cart racer inspired by the classic "Hugo" TV show. The player controls the character by dialing specific numbers on a virtual phone dial pad. Created in Godot.\
 [game presentation](https://www.youtube.com/watch?v=h2MFukTbRkA)
 
-### <time>2020.11.29</time>: [After border of time [HackYeah]](http://dominikrudnik.pl/project/single.php?id=25)  
+### <time>2020.11.29</time>: After border of time [HackYeah]
 A game created during the COVID pandemic (developed locally in a rented room). The core mechanic revolves around cooperating with the "ghosts" of your own previous attempts to survive in a spacecraft. Created in Unreal Engine 4.\
 [game presentation](https://www.youtube.com/watch?v=Rn86SN-1_rA)
 
