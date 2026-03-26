@@ -10,7 +10,7 @@ This place is as an archive for all my short projects and prototypes. It is, by 
 ## Gamejams
 
 ### <time>2026.02.01</time>: Mask Off [Kraków gamejam/GGJ 2026]
-This narrative (mostly dialogue based) game is metroivania like (especially: Kindergarden) when you stuck in the narrative loop. You dead is  necessary to push narrative forward. created in extended engine from previous game engine with was extended for 3D capability developed in C++ 17/20 using Raylib and rapidXML. 
+This narrative (mostly dialogue based) game is metroivania like (especially: Kindergarden) when you stuck in the narrative loop. You dead is  necessary to push narrative forward. created in extended engine from previous game engine with was extended for 3D capability developed in C++ 17/20 using Raylib and rapidXML.\
 [gamejam entry](https://globalgamejam.org/games/2026/mask-9-5), [source code](https://github.com/qikcik/GGJ2026)
 
 
@@ -20,7 +20,7 @@ An arcade game where you control an air bubble that constantly floats upwards. T
 
 
 ### <time>2024.04.07</time>: Prison Spotlight [Baked GameJam 2024]
-A local multiplayer game where one player controls a prisoner trying to escape, while the other tries to prevent the escape using a spotlight. Created in Unreal Engine 5.]
+A local multiplayer game where one player controls a prisoner trying to escape, while the other tries to prevent the escape using a spotlight. Created in Unreal Engine 5.\
 [gamejam entry](https://gamequad.itch.io/prison-spotlights), [game presentation](https://www.youtube.com/watch?v=zmhtSmuZovQ)
 
 
