@@ -3,6 +3,26 @@
 (my short observations about the artifacts created by other people, please keep in mind that following text is full of spoilers in classical way of understanding this term.) 
 
 
+## 30.03.2026: Fight Club (1999)
+
+First of all, the narration, especially in the first half of the movie, is great. This is the kind of movie in which the main character is also the narrator, and the dynamic scene changes combined with inside commentary are amazing (similar to Forrest Gump).
+
+Nevertheless, this movie has an odd storyline which, from my perspective, creates a deliberate dissonance. The fact that the physical body was able to act, burn down the house, and drive the car, while the narrator's consciousness was shut down and relegated to the role of a passenger, feels like a manipulated timeline. 
+But the movie uses this visual lie to make potential interpretations broader and it adds more light to show the philosophical meanings underneath, so I decided to just ignore those narrative tricks.
+
+I think that the thread about consumerism isn't the strongest plot of this movie. It is only one perspective on the problem space that the movie is trying to show. For me, it tells about how we are lost in all the abstract stuff that doesn't really matter after some point, 
+and how much we want to do things that have real consequences, how much we deeply want to take responsibility.
+
+Like the significant shift in the main character's mindset when he feels genuine remorse over the death of Bob. As the opposite of the fact that, at the beginning, the car product recall is calculated strictly based on how many humans need to die in order to mathematically justify the action.
+For me this film also shows how much we want to have a mentor, how much we want to have friends that will help us improve. We want to have someone who will show and teach us how to act. We just want to find someone to help us navigate the world, because we feel like we are missing some manual about "how to live".
+
+I don't want to interpret the ending in detail, but for me, it shows that the two sides of the main character's psyche were finally combined, joining the best from the two worlds.
+The original personality at the end learned through friction and experience, without all the madness and hedonism of Tyler Durden, but without capitulating from the world around us. And for some reason, I think that he accepted his life situation and started to feel some form of hope.
+
+For me, the strongest scene and the one that I want to remember from this film is the scene where they threaten the convenience store clerk with death in order to force him to reclaim his dreams and return to veterinary school. 
+It shows in hyperbolic way what truly matters in life, and it shows that pressure isn't always that bad. Recalling the dialogue, they give him the best gift in his life.
+
+
 ## 25.03.2026: Dead Poets Society (1989)
 
 To be honest, I do not understand why this movie is so iconic. 
