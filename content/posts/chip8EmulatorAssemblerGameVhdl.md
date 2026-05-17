@@ -7,6 +7,9 @@ short video presentation:
 
 repo link: [github](https://github.com/qikcik/CHIP8)
 
+
+**2026.05.17 update:** [Tang nano 9k implementation video](https://youtube.com/shorts/zf6hanLiGk8?si=rodcNIzfnUbO2B19)
+
 ## Introduction
 **Project goal was to:**
 - Implement one of the simplest ISA using VHDL without any mechanism like pipelining, cache, branch prediction etc.

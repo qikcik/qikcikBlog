@@ -11,7 +11,7 @@ This place is as an archive for all my short projects and prototypes. It is, by 
 
 ### <time>2026.02.01</time>: Mask Off [Kraków gamejam/GGJ 2026]
 This narrative (mostly dialogue based) game is metroivania like (especially: Kindergarden) when you stuck in the narrative loop. You dead is  necessary to push narrative forward. created in extended engine from previous game engine with was extended for 3D capability developed in C++ 17/20 using Raylib and rapidXML.\
-[gamejam entry](https://globalgamejam.org/games/2026/mask-9-5), [source code](https://github.com/qikcik/GGJ2026)
+[gamejam entry](https://globalgamejam.org/games/2026/mask-9-5), [source code](https://github.com/qikcik/GGJ2026), [editor showcase](https://www.youtube.com/watch?v=hPTj0faLSOI)
 
 
 ### <time>2025.02.28</time>: The Last Breath [LubJam/GGJ 2025]
@@ -100,3 +100,20 @@ My first game jam game. simple aracade game in which you need to match shape in 
 [gamejam entry](https://ludumdare.com/resources/archive/compo/?u=ludum-dare-35/), [game presentation](https://www.youtube.com/watch?v=IM-mMTifHO0), [source code](https://github.com/qikcik/-LD35-ShapesAttack)
 
 
+## Others
+
+### <time>2026.05.17</time>: (WIP) Qlang
+work in progress my programming language\
+[source code](https://github.com/qikcik/q-lang), [short presentation](https://www.youtube.com/watch?v=1DF9CBtQfuU), [long presentation](https://www.youtube.com/watch?v=t0z1EHyzVHY)
+
+### <time>2026.05.17</time>: (WIP) Chineese Learning App
+work in progress chinese learning app\
+[website](https://chinski.ct8.pl/)
+
+### <time>2026.05.17</time>: (WIP) CPU Software rendering
+work in progress experiments with software rendering\
+[presentation](https://youtube.com/shorts/E9pnh8w8j3s), [source code](https://github.com/qikcik/SoftwareRenderer)
+
+### <time>2019.06.01</time>: Qboy Mono
+A simple, prototype portable mini-console, based on the ATmega8A microcontroller and a Nokia 5510 display. With: 2048, Flappy Bird, Arkanoid and pseudo OS. \
+[presentation](https://www.youtube.com/watch?v=g6yjpHCi4UY), [source code](https://github.com/qikcik/QBOY-MONO)

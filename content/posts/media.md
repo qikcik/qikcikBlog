@@ -21,7 +21,7 @@ The original personality at the end learned through friction and experience, wit
 
 For me, the strongest scene and the one that I want to remember from this film is the scene where they threaten the convenience store clerk with death in order to force him to reclaim his dreams and return to veterinary school. 
 It shows in hyperbolic way what truly matters in life, and it shows that pressure isn't always that bad. Recalling the dialogue, they give him the best gift in his life.
-
+Also, the quote "You need to start a fight and lose it" lives rent-free in my mind.
 
 ## 25.03.2026: Dead Poets Society (1989)
 
